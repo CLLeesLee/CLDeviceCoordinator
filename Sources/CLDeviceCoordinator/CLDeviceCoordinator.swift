@@ -17,6 +17,26 @@ final class CLDeviceCoordinator {
     
 }
 
+// MARK: definations
+extension CLDeviceCoordinator {
+    
+    @propertyWrapper
+    struct CLUserDefaults<Value> {
+        let key: String
+        let defaultValue: Value
+        var container: UserDefaults = .standard
+
+        var wrappedValue: Value {
+            get {
+                return container.object(forKey: key) as? Value ?? defaultValue
+            }
+            set {
+                container.set(newValue, forKey: key)
+            }
+        }
+    }
+}
+
 // MARK: Events
 extension CLDeviceCoordinator {
     
