@@ -8,11 +8,14 @@ final class CLDeviceCoordinator {
     /// singleton
     public static let `default` = CLDeviceCoordinator()
     
-    /// coordinator storage, default to using filemanger witch is implemented
+    /// coordinator's sleep-manger, that can provide the ability and the logical of user's device sleep moritoring
+    public let sleepManager: CLDeviceSleepManager = CLDeviceSleepManager()
+    
+    /// coordinator's storage, that can saving data-model witch is from coordinator's specific event
     public private(set) var storage: CLDeviceCoordinatorStorage = CLDeviceCoordinatorDefaultStorage()
     
-    /// coordinator sleep-manger, provide the logical of user's device sleep moritoring
-    public private(set) var sleepManager: CLDeviceSleepManager = CLDeviceSleepManager()
+    /// The service plugin for CLDeviceCoordinator, that can provide some abilities like networking-ability to coordinator
+    public private(set) var service: CLDeviceSleepService?
     
     private init() {
         addNotifications()
@@ -56,7 +59,7 @@ extension CLDeviceCoordinator {
 // MARK: Private Methods
 extension CLDeviceCoordinator {
     
-    /// adding notifications observation to NotificationCenter that from UIApplication
+    /// adding observations to NotificationCenter's notifications thats is menber of UIApplication
     private func addNotifications() {
         
         let locked = UIApplication.protectedDataWillBecomeUnavailableNotification
@@ -76,7 +79,7 @@ extension CLDeviceCoordinator {
         
     }
     
-    /// the thing will doing when user will lock device
+    /// the action will excute when user will lock device
     /// - Parameter notification: the notification from UIApplication
     private func deviceLockedAction(_ notification: Notification) {
         Task {
@@ -86,7 +89,7 @@ extension CLDeviceCoordinator {
         }
     }
     
-    /// the thing will doing when user will unlock device
+    /// the action will excute when user will unlock device
     /// - Parameter notification: the notification from UIApplication
     private func deviceUnlockAction(_ notification: Notification) {
         // generateModel
@@ -97,7 +100,7 @@ extension CLDeviceCoordinator {
         
     }
     
-    /// the thing will doing when user will kill this program
+    /// the action will excute when user will kill this program
     /// - Parameter notification: the notification from UIApplication
     private func deviceKillAppcationAction(_ notification: Notification) {
         // generateModel
@@ -110,8 +113,8 @@ extension CLDeviceCoordinator {
 // MARK: Public Methods
 extension CLDeviceCoordinator {
     
-    /// launching this Coordinator
-    /// - Parameter storage: the object that is confirming to CLDeviceCoordinatorStorage(Optional)
+    /// launching this Coordinator's share singleton
+    /// - Parameter bring storage: the object that is confirming to CLDeviceCoordinatorStorage(Optional)
     public func launch<T>(bring storage: T? = nil) where T: CLDeviceCoordinatorStorage {
         let className = String(describing: CLDeviceCoordinator.self)
         let memoryDescription = String(describing: self)
@@ -120,6 +123,12 @@ extension CLDeviceCoordinator {
         if let storage = storage {
             self.storage = storage
         }
+    }
+    
+    /// injecting a service plugin to coordinator
+    /// - Parameter service: an object that is conform to the protocol named `CLDeviceSleepService`
+    public func inject<T>(service: T) where T: CLDeviceSleepService {
+        self.service = service
     }
     
 }
