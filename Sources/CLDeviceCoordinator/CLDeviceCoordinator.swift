@@ -11,6 +11,9 @@ final class CLDeviceCoordinator {
     /// coordinator storage, default to using filemanger witch is implemented
     public private(set) var storage: CLDeviceCoordinatorStorage = CLDeviceCoordinatorDefaultStorage()
     
+    /// coordinator sleep-manger, provide the logical of user's device sleep moritoring
+    public private(set) var sleepManager: CLDeviceSleepManager = CLDeviceSleepManager()
+    
     private init() {
         addNotifications()
     }
