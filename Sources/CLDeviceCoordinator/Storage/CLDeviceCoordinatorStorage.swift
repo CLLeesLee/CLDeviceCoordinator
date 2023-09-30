@@ -19,19 +19,20 @@ struct CLDeviceEventModel: Codable {
 /// The interfaces that a CLDeviceCoordinatorStorage must be implement
 protocol CLDeviceCoordinatorStorage {
     
-    /// the interface witch can be call in the sync context
+    /// An interface for CLDeviceCoordinator to injecting a new CLDeviceEventModel synchronously
     /// - Parameter model: CLDeviceEventModel
     func record(model: CLDeviceEventModel)
     
-    /// the interface witch will receive the CLDeviceEventModel from CLDeviceCoordinator
+    /// An interface for CLDeviceCoordinator to injecting a new CLDeviceEventModel
     /// - Parameter model: CLDeviceEventModel
     func record(_ model: CLDeviceEventModel) async
     
-    /// the interface witch can be fething the collection of CLDeviceEventModel by CLDeviceCoordinator
+    /// An interface for CLDeviceCoordinator to fetching collections of CLDeviceEventModel
     /// - Parameters:
-    ///   - in date: passing a date object as a constraint using in the action of models-feching
-    ///   - of event: passing an CLDeviceCoordinator.Event as a constraint using in the action of models-fetching
+    ///   - in date: passing a date-object as a constraint using in the action of models-feching
+    ///   - of event: passing a CLDeviceCoordinator.Event as a constraint using in the action of models-fetching operation
     /// - Returns: [CLDeviceEventModel]
-    func fetches(in date: Date?, of event: CLDeviceCoordinator.Event?) async -> [CLDeviceEventModel]
+    typealias Event = CLDeviceCoordinator.Event
+    func fetches(in date: Date?, of event: Event?, exclude exEvent: Event?) async -> [CLDeviceEventModel]
     
 }
