@@ -33,6 +33,6 @@ protocol CLDeviceCoordinatorStorage {
     ///   - of event: passing a CLDeviceCoordinator.Event as a constraint using in the action of models-fetching operation
     /// - Returns: [CLDeviceEventModel]
     typealias Event = CLDeviceCoordinator.Event
-    func fetches(in date: Date?, of event: Event?, exclude exEvent: Event?) async -> [CLDeviceEventModel]
+    func fetches(in date: Date?, of event: Event?, exclude events: [Event]?) async -> [CLDeviceEventModel]
     
 }

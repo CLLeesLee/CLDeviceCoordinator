@@ -74,7 +74,7 @@ extension CLDeviceCoordinatorDefaultStorage: CLDeviceCoordinatorStorage {
         self.models.append(model)
     }
     
-    func fetches(in date: Date?, of event: CLDeviceCoordinator.Event?) async -> [CLDeviceEventModel] {
+    func fetches(in date: Date?, of event: Event?, exclude events: [Event]?) async -> [CLDeviceEventModel] {
         var models = self.models
         if let date = date {
             let calendar = Calendar.current
@@ -87,6 +87,13 @@ extension CLDeviceCoordinatorDefaultStorage: CLDeviceCoordinatorStorage {
                 model.event == event
             }
         }
+        if let excludings = events {
+            models = models.filter { model in
+                let event = model.event
+                return !excludings.contains(event)
+            }
+        }
+        
         return models
     }
     
